@@ -1,0 +1,112 @@
+10.747  9.220
+10.686  9.422
+10.685  9.500
+10.732  9.360
+10.686  9.344
+10.763  9.158
+10.717  9.141
+10.592  9.328
+10.654  9.486
+10.950  9.314
+
+10.686  9.328
+10.686  9.314
+10.685  9.220
+10.654  9.158
+10.592  9.141
+
+10.6606 9.2322
+
+How much time is used by calls to index_version?
+    10.6606000000 seconds
+How much time is used by calls to pointer_version?
+     9.2322000000 seconds
+
+Speedup = old/new = 10.6606/9.2322 = 1.154719352
+
+
+
+
+
+1.701   1.700
+1.716   1.700
+1.700   1.700
+1.700   1.716
+1.700   1.716
+1.700   1.700
+1.700   1.700
+1.700   1.700
+1.700   1.700
+1.716   1.684
+
+1.700   1.700
+1.700   1.700
+1.700   1.700
+1.700   1.700
+1.700   1.684
+
+1.700   1.6968
+
+Speedup = old_index/new_index = 10.6606/1.700 = 6.270941176
+Speedup = old_pointer/new_pointer = 9.2322/1.6968 = 5.440947666
+
+With optimization, pointer_version is not significantly faster than index_version
+Asking for optimization is a more important factor for array-processing speed.
+
+
+
+
+
+
+1.294   1.311
+1.310   1.295
+1.310   1.310
+1.310   1.310
+1.310   1.326
+1.294   1.311
+1.310   1.310
+1.294   1.326
+1.310   1.326
+1.310   1.326
+
+1.294   1.295
+1.294   1.310
+1.294   1.310
+1.310   1.310
+1.310   1.311
+
+1.3004  1.3072
+
+speedup = funroll/02 = 1.6968/1.3072 = 1.298041616
+
+
+
+
+
+
+
+
+
+    movl    $0, -4(%rbp)
+    jmp     .L2
+.L3:
+    movl    -4(%rbp), %eax
+    cltq
+    leaq    0(,%rax,4), %rdx
+    movq    16(%rbp), %rax
+    addq    %rdx, %rax
+    movl    (%rax), %eax
+    addl    %eax, -8(%rbp)
+    addl    $1, -4(%rbp)
+.L2:
+    movl    -4(%rbp), %eax
+    cmpl    24(%rbp), %eax
+    jl      .L3
+
+f:  c7  45  f8  00  00  00  00      movl    $0x0,-0x8(%rbp)
+
+for (i = 0; i < ARRAY_SIZE; i++)
+is replaced with
+for (i = 0; i < 4000; i++)
+
+43: 81  7d  fc  9f  0f  00  00      cmpl    $0xf9f,-0x4(%rbp)
